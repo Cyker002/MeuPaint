@@ -4,6 +4,7 @@
  */
 package gui;
 
+import gui.ferramentas.BaldeDeTinta;
 import gui.geom.Caneta;
 import gui.geom.Elipse;
 import gui.geom.Forma;
@@ -56,6 +57,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         painelCorPreenchimento = new javax.swing.JPanel();
         Desfazer = new javax.swing.JButton();
         Refazer = new javax.swing.JButton();
+        btnPixelArt = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Meu Paint");
@@ -178,6 +180,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnGroupFerramentas.add(btnPixelArt);
+        btnPixelArt.setText("Pixel Art");
+        btnPixelArt.addActionListener(this::btnPixelArtActionPerformed);
+
         javax.swing.GroupLayout painelFerramentasLayout = new javax.swing.GroupLayout(painelFerramentas);
         painelFerramentas.setLayout(painelFerramentasLayout);
         painelFerramentasLayout.setHorizontalGroup(
@@ -195,7 +201,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnCaneta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBalde)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPixelArt)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Desfazer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Refazer)
@@ -209,10 +217,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelFerramentasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBalde, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCaneta, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(painelFerramentasLayout.createSequentialGroup()
+                .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCaneta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(painelCorPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -220,10 +227,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                             .addComponent(btnRetangulo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnElipse, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnPoligono, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(Desfazer)
                         .addComponent(Refazer))
-                    .addComponent(painelCorContorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(painelCorContorno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnPixelArt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(btnBalde, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -247,46 +257,55 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void painelDesenhoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMousePressed
-    if (btnBalde.isSelected()) {
-        painelDesenho.preencherBalde(evt.getX(), evt.getY(), painelCorPreenchimento.getBackground());
-        novaForma = null;
-        return;
-    }
-    
-    painelDesenho.salvarEstado();
+        if (btnBalde.isSelected()) {
+            BaldeDeTinta.preencher(painelDesenho, evt.getX(), evt.getY(), painelCorPreenchimento.getBackground());
+            novaForma = null;
+            return;
+        }
 
-    if (btnLinha.isSelected()) {
-        novaForma = new Linha();
-    } else if (btnRetangulo.isSelected()) {
-        novaForma = new Retangulo();
-    } else if (btnElipse.isSelected()) {
-        novaForma = new Elipse();
-    } else if (btnPoligono.isSelected()) {
-        novaForma = new Poligono(quantidadeLados);
-    } else if (btnCaneta.isSelected()) {
-        novaForma = new Caneta();
-    } else {
-        novaForma = new Linha();
-    }
+        if (btnPixelArt.isSelected() || painelDesenho.getGradePixelArt().isVisivel()) {
+            painelDesenho.salvarEstado();
+            painelDesenho.pintarPixel(evt.getX(), evt.getY(), painelCorContorno.getBackground());
+            novaForma = null;
+            return;
+        }
 
-    if (novaForma instanceof Caneta) {
-        ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
-    }
+        if (btnLinha.isSelected()) {
+            novaForma = new Linha();
+        } else if (btnRetangulo.isSelected()) {
+            novaForma = new Retangulo();
+        } else if (btnElipse.isSelected()) {
+            novaForma = new Elipse();
+        } else if (btnPoligono.isSelected()) {
+            novaForma = new Poligono(quantidadeLados);
+        } else if (btnCaneta.isSelected()) {
+            novaForma = new Caneta();
+        } else {
+            novaForma = new Linha();
+        }
 
-    novaForma.setIniX(evt.getX());
-    novaForma.setIniY(evt.getY());
-    novaForma.setFimX(evt.getX());
-    novaForma.setFimY(evt.getY());
-    novaForma.setCorContorno(painelCorContorno.getBackground());
-    novaForma.setCorPreenchimento(painelCorPreenchimento.getBackground());
+        if (novaForma instanceof Caneta) {
+            ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
+        }
 
-    painelDesenho.adicionarForma(novaForma);
+        novaForma.setIniX(evt.getX());
+        novaForma.setIniY(evt.getY());
+        novaForma.setFimX(evt.getX());
+        novaForma.setFimY(evt.getY());
+        novaForma.setCorContorno(painelCorContorno.getBackground());
+        novaForma.setCorPreenchimento(painelCorPreenchimento.getBackground());
 
+        painelDesenho.adicionarForma(novaForma);
     }//GEN-LAST:event_painelDesenhoMousePressed
 
     private void painelDesenhoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseReleased
+        if (btnPixelArt.isSelected() || painelDesenho.getGradePixelArt().isVisivel()) {
+            painelDesenho.pintarPixel(evt.getX(), evt.getY(), painelCorContorno.getBackground());
+            return;
+        }
+
         if (novaForma == null) return;
-        
+
         if (novaForma instanceof Caneta) {
             ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
         } else {
@@ -294,12 +313,18 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             novaForma.setFimY(evt.getY());
         }
         painelDesenho.repaint();
-        novaForma = null;
     }//GEN-LAST:event_painelDesenhoMouseReleased
 
     private void painelDesenhoMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseDragged
+        
+            
+        if (painelDesenho.getGradePixelArt().isVisivel()) {
+            painelDesenho.pintarPixel(evt.getX(), evt.getY(), painelCorContorno.getBackground());
+            return;
+        }
+        
         if (novaForma == null) return;
-    
+        
         if (novaForma instanceof Caneta) {
             ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
         } else {
@@ -366,6 +391,24 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void RefazerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RefazerMouseClicked
         painelDesenho.refazer();
     }//GEN-LAST:event_RefazerMouseClicked
+
+    private void btnPixelArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPixelArtActionPerformed
+        boolean ativo = !painelDesenho.getGradePixelArt().isVisivel();
+        painelDesenho.getGradePixelArt().setVisivel(ativo);
+
+        if (ativo) {
+            String input = JOptionPane.showInputDialog(this, "Informe o número de pixels (ex: 8, 16, 32, 64):", "32");
+            try {
+                int res = Integer.parseInt(input);
+                if (res > 0) {
+                    painelDesenho.getGradePixelArt().redimensionar(res, res);
+            }
+            } catch (NumberFormatException exc) {
+                // Mantém resolução anterior caso digite inválido
+            }
+        }
+        painelDesenho.repaint();
+    }//GEN-LAST:event_btnPixelArtActionPerformed
     
     /**
      * @param args the command line arguments
@@ -401,6 +444,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JToggleButton btnElipse;
     private javax.swing.ButtonGroup btnGroupFerramentas;
     private javax.swing.JToggleButton btnLinha;
+    private javax.swing.JToggleButton btnPixelArt;
     private javax.swing.JToggleButton btnPoligono;
     private javax.swing.JToggleButton btnRetangulo;
     private javax.swing.JPanel painelCorContorno;

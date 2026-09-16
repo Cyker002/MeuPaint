@@ -1,12 +1,10 @@
 package gui;
 
-import estruturadedados.FilaCircular;
 import estruturasdedados.Pilha;
 import gui.geom.Forma;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +12,9 @@ import javax.swing.JPanel;
 
 public class PainelDesenho extends JPanel {
 
+    private GradePixelArt gradePixelArt = new GradePixelArt(16);
     private List<Forma> formas;
     private BufferedImage imagemBuffer;
-    
     private Pilha pilhaDesfazer;
     private Pilha pilhaRefazer;
 
@@ -26,11 +24,10 @@ public class PainelDesenho extends JPanel {
         pilhaRefazer = new Pilha();
     }
 
-
     public void salvarEstado() {
         inicializarBufferSeNecessario();
         pilhaDesfazer.push(new EstadoDesenho(imagemBuffer, formas));
-        pilhaRefazer.clear(); 
+        pilhaRefazer.clear();
     }
 
     public void desfazer() {
@@ -53,12 +50,9 @@ public class PainelDesenho extends JPanel {
         }
     }
 
-   
-
-    private void inicializarBufferSeNecessario() {
+    public void inicializarBufferSeNecessario() {
         int w = getWidth();
         int h = getHeight();
-
         if (w <= 0 || h <= 0) return;
 
         if (imagemBuffer == null || imagemBuffer.getWidth() != w || imagemBuffer.getHeight() != h) {
@@ -77,9 +71,11 @@ public class PainelDesenho extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+       
         super.paintComponent(g);
         inicializarBufferSeNecessario();
 
+        // 1. Desenha o fundo e a imagem do buffer
         if (imagemBuffer != null) {
             g.drawImage(imagemBuffer, 0, 0, null);
         } else {
@@ -87,8 +83,14 @@ public class PainelDesenho extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
+        // 2. Desenha as formas geométricas normais
         for (Forma forma : formas) {
             forma.desenhar(g);
+        }
+
+        // 3. Desenha a grade e os pixels da Pixel Art por cima de tudo
+        if (gradePixelArt != null) {
+            gradePixelArt.desenhar(g, getWidth(), getHeight());
         }
     }
 
@@ -96,62 +98,20 @@ public class PainelDesenho extends JPanel {
         formas.add(forma);
     }
 
-    public void preencherBalde(int startX, int startY, Color novaCor) {
-        inicializarBufferSeNecessario();
-        if (imagemBuffer == null) return;
+    public BufferedImage getImagemBuffer() {
+        return imagemBuffer;
+    }
 
-        int width = imagemBuffer.getWidth();
-        int height = imagemBuffer.getHeight();
+    public List<Forma> getFormas() {
+        return formas;
+    }
+    
+    public GradePixelArt getGradePixelArt() {
+        return gradePixelArt;
+    }
 
-        if (startX < 0 || startX >= width || startY < 0 || startY >= height) {
-            return;
-        }
-
-        // SALVA O ESTADO ANTES DE PINTAR COM O BALDE
-        salvarEstado();
-
-        if (!formas.isEmpty()) {
-            Graphics2D gBuffer = imagemBuffer.createGraphics();
-            for (Forma forma : formas) {
-                forma.desenhar(gBuffer);
-            }
-            gBuffer.dispose();
-            formas.clear();
-        }
-
-        int corAlvo = imagemBuffer.getRGB(startX, startY) & 0x00FFFFFF;
-        int corSubstituta = novaCor.getRGB() & 0x00FFFFFF;
-
-        if (corAlvo == corSubstituta) {
-            return;
-        }
-
-        FilaCircular<Point> fila = new FilaCircular<>();
-        boolean[][] visitado = new boolean[width][height];
-
-        fila.enfileirar(new Point(startX, startY));
-        visitado[startX][startY] = true;
-        imagemBuffer.setRGB(startX, startY, novaCor.getRGB());
-
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1};
-
-        while (!fila.estaVazia()) {
-            Point p = fila.desenfileirar();
-
-            for (int i = 0; i < 4; i++) {
-                int nx = p.x + dx[i];
-                int ny = p.y + dy[i];
-
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-                    if (!visitado[nx][ny] && (imagemBuffer.getRGB(nx, ny) & 0x00FFFFFF) == corAlvo) {
-                        visitado[nx][ny] = true;
-                        imagemBuffer.setRGB(nx, ny, novaCor.getRGB());
-                        fila.enfileirar(new Point(nx, ny));
-                    }
-                }
-            }
-        }
+    public void pintarPixel(int mouseX, int mouseY, Color cor) {
+        gradePixelArt.pintarPixel(mouseX, mouseY, getWidth(), getHeight(), cor);
         repaint();
     }
 }
