@@ -6,7 +6,8 @@ Este repositório contém um **programa de desenho** interativo, inspirado nas f
 * Desenho livre utilizando o mouse.
 * Seleção de diferentes cores para o traço.
 * Desenho de formula geometricas
-* 
+* Balde de Tinta
+* Desfazer e Fazer
 ## 💻 Tecnologias e Ferramentas
 * **Linguagem:** Java
 * **Interface Gráfica:** Engine customizada (material didático)
@@ -14,4 +15,4 @@ Este repositório contém um **programa de desenho** interativo, inspirado nas f
 ## 🎓 Contexto Acadêmico
 Este simulador foi desenvolvido como projeto prático para o curso de **Ciência da Computação** no **IFSP - Câmpus São João da Boa Vista**.
 
-**Desenvolvido por:** Cayke Chen
+**Desenvolvido por:** Cayke Chen e Raul Pierre
