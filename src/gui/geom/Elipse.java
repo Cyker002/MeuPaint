@@ -4,12 +4,13 @@
  */
 package gui.geom;
 
+import gui.geom.Forma;
 import java.awt.Color;
 import java.awt.Graphics;
 
 /**
  *
- * @author Prof. Dr. David Buzatto
+ * @author Cayke
  */
 public class Elipse extends Forma {
 

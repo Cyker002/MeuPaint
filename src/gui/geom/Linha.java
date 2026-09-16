@@ -9,7 +9,7 @@ import java.awt.Graphics;
 
 /**
  *
- * @author Prof. Dr. David Buzatto
+ * @author Cayke
  */
 public class Linha extends Forma {
 

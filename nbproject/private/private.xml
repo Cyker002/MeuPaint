@@ -3,13 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/JanelaPrincipal.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/PainelDesenho.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/geom/Linha.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/geom/Retangulo.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/geom/Forma.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/geom/Elipse.java</file>
-            <file>file:/home/raul/Desktop/Estrutura%20de%20Dados/MeuPaint/src/gui/geom/Poligono.java</file>
+            <file>file:/home/raul/Desktop/EstruturaDeDados/MeuPaint/src/gui/geom/Caneta.java</file>
+            <file>file:/home/raul/Desktop/EstruturaDeDados/MeuPaint/src/JanelaPrincipal.java</file>
         </group>
     </open-files>
 </project-private>

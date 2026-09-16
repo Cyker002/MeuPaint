@@ -4,6 +4,7 @@
  */
 package gui.geom;
 
+import gui.geom.Forma;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
