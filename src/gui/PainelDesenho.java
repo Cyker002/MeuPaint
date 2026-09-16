@@ -17,7 +17,6 @@ public class PainelDesenho extends JPanel {
     private List<Forma> formas;
     private BufferedImage imagemBuffer;
     
-    // Nossas pilhas de histórico
     private Pilha pilhaDesfazer;
     private Pilha pilhaRefazer;
 
@@ -27,12 +26,11 @@ public class PainelDesenho extends JPanel {
         pilhaRefazer = new Pilha();
     }
 
-    // --- MÉTODOS DE DESFAZER E REFAZER ---
 
     public void salvarEstado() {
         inicializarBufferSeNecessario();
         pilhaDesfazer.push(new EstadoDesenho(imagemBuffer, formas));
-        pilhaRefazer.clear(); // Se fez uma ação nova, apaga o futuro
+        pilhaRefazer.clear(); 
     }
 
     public void desfazer() {
@@ -55,7 +53,7 @@ public class PainelDesenho extends JPanel {
         }
     }
 
-    // --- MÉTODOS DE DESENHO (O resto do seu código) ---
+   
 
     private void inicializarBufferSeNecessario() {
         int w = getWidth();

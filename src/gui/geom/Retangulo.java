@@ -23,8 +23,8 @@ public class Retangulo extends Forma {
         int largura = fimXD - iniXD;
         int altura = fimYD - iniYD;
         
-        g.setColor( corPreenchimento );
-        g.fillRect( iniXD, iniYD, largura, altura );
+       
+        
         
         g.setColor( corContorno );
         g.drawRect( iniXD, iniYD, largura, altura );

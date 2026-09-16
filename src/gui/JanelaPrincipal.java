@@ -252,6 +252,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         novaForma = null;
         return;
     }
+    
+    painelDesenho.salvarEstado();
 
     if (btnLinha.isSelected()) {
         novaForma = new Linha();
@@ -284,8 +286,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void painelDesenhoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseReleased
         if (novaForma == null) return;
-        
-        painelDesenho.salvarEstado();
         
         if (novaForma instanceof Caneta) {
             ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
@@ -337,9 +337,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         try{
             String valor = JOptionPane.showInputDialog("Quantidade de Lados");
             int quantidade = Integer.parseInt(valor);
-            if( quantidadeLados > 3){
+            if( quantidadeLados < 3){
                 quantidadeLados = 3;
             }
+            
+            quantidadeLados = quantidade;
+            
         }catch(NumberFormatException exc){
         }
     }//GEN-LAST:event_btnPoligonoActionPerformed
@@ -353,15 +356,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnElipseActionPerformed
 
     private void DesfazerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DesfazerActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_DesfazerActionPerformed
 
     private void DesfazerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DesfazerMouseClicked
-        // TODO add your handling code here:
+        painelDesenho.desfazer();
     }//GEN-LAST:event_DesfazerMouseClicked
 
     private void RefazerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RefazerMouseClicked
-        // TODO add your handling code here:
+        painelDesenho.refazer();
     }//GEN-LAST:event_RefazerMouseClicked
     
     /**
