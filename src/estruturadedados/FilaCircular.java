@@ -1,49 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package aindaNaoSei;
+package estruturadedados;
 
-import java.awt.Point;
-import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 
-/**
- *
- * @author raul
- */
 public class FilaCircular<T> {
-
-
 
     private T[] dados;
     private int inicio;
     private int fim;
     private int tamanho;
-    private final Class<T> tipoElemento; // Guarda o tipo de tempo de execução
 
     private static final int CAPACIDADE_INICIAL_PADRAO = 4;
 
-    public FilaCircular(Class<T> tipoElemento) {
-        this(tipoElemento, CAPACIDADE_INICIAL_PADRAO);
+    public FilaCircular() {
+        this(CAPACIDADE_INICIAL_PADRAO);
     }
     
-    // Dentro da sua classe FilaCircular:
-    public Class<?> getTipoDoArrayInterno() {
-        return dados.getClass();
-    }
-
     @SuppressWarnings("unchecked")
-    public FilaCircular(Class<T> tipoElemento, int capacidadeInicial) {
-        if (tipoElemento == null) {
-            throw new IllegalArgumentException("O tipo da classe não pode ser nulo.");
-        }
+    public FilaCircular(int capacidadeInicial) {
         if (capacidadeInicial <= 0) {
             throw new IllegalArgumentException("A capacidade deve ser maior que zero.");
         }
-        this.tipoElemento = tipoElemento;
-        // Cria fisicamente um array do tipo T em tempo de execução
-        this.dados = (T[]) Array.newInstance(tipoElemento, capacidadeInicial);
+        
+        this.dados = (T[]) new Object[capacidadeInicial];
         this.inicio = 0;
         this.fim = 0;
         this.tamanho = 0;
@@ -65,7 +43,7 @@ public class FilaCircular<T> {
         }
 
         T valorRemovido = dados[inicio];
-        dados[inicio] = null;
+        dados[inicio] = null; 
 
         inicio = (inicio + 1) % dados.length;
         tamanho--;
@@ -98,8 +76,7 @@ public class FilaCircular<T> {
 
     @SuppressWarnings("unchecked")
     private void redimensionar(int novaCapacidade) {
-        // Aloca o novo array com o tipo exato T[]
-        T[] novosDados = (T[]) Array.newInstance(tipoElemento, novaCapacidade);
+        T[] novosDados = (T[]) new Object[novaCapacidade];
 
         for (int i = 0; i < tamanho; i++) {
             novosDados[i] = dados[(inicio + i) % dados.length];
@@ -107,7 +84,7 @@ public class FilaCircular<T> {
 
         this.dados = novosDados;
         this.inicio = 0;
-        this.fim = tamanho;
+        this.fim = tamanho; 
     }
 
     @Override
@@ -125,17 +102,5 @@ public class FilaCircular<T> {
         }
         sb.append("]");
         return sb.toString();
-    }
-
-public static void main(String[] args) {
-        // Passa Point.class para o construtor saber o Type exato
-        FilaCircular<Point> fila = new FilaCircular<>(Point.class);
-
-        fila.enfileirar(new Point(10, 20));
-        fila.enfileirar(new Point(30, 40));
-
-        // Internamente o array é de fato um Point[], e não um Object[] disfarçado
-        System.out.println("Tipo real do array: " + fila.getTipoDoArrayInterno().getTypeName());
-        System.out.println("Desenfileirado: " + fila.desenfileirar());
     }
 }

@@ -1,7 +1,8 @@
 package gui;
 
+import estruturadedados.FilaCircular;
+import estruturasdedados.Pilha;
 import gui.geom.Forma;
-import aindaNaoSei.FilaCircular;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,10 +16,46 @@ public class PainelDesenho extends JPanel {
 
     private List<Forma> formas;
     private BufferedImage imagemBuffer;
+    
+    // Nossas pilhas de histórico
+    private Pilha pilhaDesfazer;
+    private Pilha pilhaRefazer;
 
     public PainelDesenho() {
         formas = new ArrayList<>();
+        pilhaDesfazer = new Pilha();
+        pilhaRefazer = new Pilha();
     }
+
+    // --- MÉTODOS DE DESFAZER E REFAZER ---
+
+    public void salvarEstado() {
+        inicializarBufferSeNecessario();
+        pilhaDesfazer.push(new EstadoDesenho(imagemBuffer, formas));
+        pilhaRefazer.clear(); // Se fez uma ação nova, apaga o futuro
+    }
+
+    public void desfazer() {
+        if (!pilhaDesfazer.isEmpty()) {
+            pilhaRefazer.push(new EstadoDesenho(imagemBuffer, formas));
+            EstadoDesenho estadoAnterior = pilhaDesfazer.pop();
+            this.imagemBuffer = estadoAnterior.getImagem();
+            this.formas = estadoAnterior.getFormas();
+            repaint();
+        }
+    }
+
+    public void refazer() {
+        if (!pilhaRefazer.isEmpty()) {
+            pilhaDesfazer.push(new EstadoDesenho(imagemBuffer, formas));
+            EstadoDesenho estadoSeguinte = pilhaRefazer.pop();
+            this.imagemBuffer = estadoSeguinte.getImagem();
+            this.formas = estadoSeguinte.getFormas();
+            repaint();
+        }
+    }
+
+    // --- MÉTODOS DE DESENHO (O resto do seu código) ---
 
     private void inicializarBufferSeNecessario() {
         int w = getWidth();
@@ -52,7 +89,6 @@ public class PainelDesenho extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        // Desenha as formas que ainda não foram consolidadas
         for (Forma forma : formas) {
             forma.desenhar(g);
         }
@@ -62,9 +98,6 @@ public class PainelDesenho extends JPanel {
         formas.add(forma);
     }
 
-    /**
-     * Flood Fill com Fila Circular usando TYPE_INT_RGB (evita problemas com Alpha).
-     */
     public void preencherBalde(int startX, int startY, Color novaCor) {
         inicializarBufferSeNecessario();
         if (imagemBuffer == null) return;
@@ -76,8 +109,9 @@ public class PainelDesenho extends JPanel {
             return;
         }
 
-        // 1. Estampa todas as formas já feitas na imagem de pixels
-        // para que suas linhas e bordas sirvam de parede para o balde
+        // SALVA O ESTADO ANTES DE PINTAR COM O BALDE
+        salvarEstado();
+
         if (!formas.isEmpty()) {
             Graphics2D gBuffer = imagemBuffer.createGraphics();
             for (Forma forma : formas) {
@@ -87,19 +121,14 @@ public class PainelDesenho extends JPanel {
             formas.clear();
         }
 
-        // Usamos máscara 0x00FFFFFF para ignorar o canal Alfa e comparar só RGB puro
         int corAlvo = imagemBuffer.getRGB(startX, startY) & 0x00FFFFFF;
         int corSubstituta = novaCor.getRGB() & 0x00FFFFFF;
 
-        // Se a cor clicada for idêntica à cor que vai pintar, não faz nada
         if (corAlvo == corSubstituta) {
             return;
         }
 
-        // 2. Fila BFS usando a sua FilaCircular
-        FilaCircular<Point> fila = new FilaCircular<>(Point.class);
-
-        // Matriz de visitados para evitar que o mesmo pixel entre múltiplas vezes na fila
+        FilaCircular<Point> fila = new FilaCircular<>();
         boolean[][] visitado = new boolean[width][height];
 
         fila.enfileirar(new Point(startX, startY));
@@ -125,7 +154,6 @@ public class PainelDesenho extends JPanel {
                 }
             }
         }
-
         repaint();
     }
 }

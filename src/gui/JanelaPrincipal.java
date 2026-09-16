@@ -43,8 +43,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         btnGroupFerramentas = new javax.swing.ButtonGroup();
+        DesfazerRefazer = new javax.swing.ButtonGroup();
         painelDesenho = new gui.PainelDesenho();
         painelFerramentas = new javax.swing.JPanel();
+        btnBalde = new javax.swing.JToggleButton();
         btnLinha = new javax.swing.JToggleButton();
         btnRetangulo = new javax.swing.JToggleButton();
         btnElipse = new javax.swing.JToggleButton();
@@ -52,7 +54,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnCaneta = new javax.swing.JToggleButton();
         painelCorContorno = new javax.swing.JPanel();
         painelCorPreenchimento = new javax.swing.JPanel();
-        btnBalde = new javax.swing.JToggleButton();
+        Desfazer = new javax.swing.JButton();
+        Refazer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Meu Paint");
@@ -82,6 +85,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGap(0, 259, Short.MAX_VALUE)
         );
 
+        btnGroupFerramentas.add(btnBalde);
+        btnBalde.setText("Balde");
+        btnBalde.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnBalde.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+
         btnGroupFerramentas.add(btnLinha);
         btnLinha.setSelected(true);
         btnLinha.setText("Linha");
@@ -97,6 +105,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnElipse.setText("Elipse");
         btnElipse.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnElipse.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnElipse.addActionListener(this::btnElipseActionPerformed);
 
         btnGroupFerramentas.add(btnPoligono);
         btnPoligono.setText("Polígono");
@@ -108,10 +117,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnCaneta.setText("Caneta");
         btnCaneta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCaneta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCaneta.addActionListener(this::btnCanetaActionPerformed);
 
         painelCorContorno.setBackground(new java.awt.Color(0, 0, 0));
         painelCorContorno.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        painelCorContorno.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        painelCorContorno.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         painelCorContorno.setPreferredSize(new java.awt.Dimension(20, 20));
         painelCorContorno.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -132,7 +142,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         painelCorPreenchimento.setBackground(new java.awt.Color(255, 255, 255));
         painelCorPreenchimento.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        painelCorPreenchimento.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        painelCorPreenchimento.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         painelCorPreenchimento.setPreferredSize(new java.awt.Dimension(20, 20));
         painelCorPreenchimento.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -151,10 +161,22 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGap(0, 18, Short.MAX_VALUE)
         );
 
-        btnGroupFerramentas.add(btnBalde);
-        btnBalde.setText("Balde");
-        btnBalde.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBalde.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        Desfazer.setText("Desfazer");
+        DesfazerRefazer.add(Desfazer);
+        Desfazer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DesfazerMouseClicked(evt);
+            }
+        });
+        Desfazer.addActionListener(this::DesfazerActionPerformed);
+
+        Refazer.setText("Refazer");
+        DesfazerRefazer.add(Refazer);
+        Refazer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                RefazerMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelFerramentasLayout = new javax.swing.GroupLayout(painelFerramentas);
         painelFerramentas.setLayout(painelFerramentasLayout);
@@ -163,36 +185,46 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGroup(painelFerramentasLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnLinha)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRetangulo)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnElipse)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPoligono)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCaneta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBalde)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                .addComponent(Desfazer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Refazer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelCorContorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelCorPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         painelFerramentasLayout.setVerticalGroup(
             painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelFerramentasLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
+                .addContainerGap()
                 .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBalde, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(painelCorPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(painelCorContorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRetangulo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnElipse, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPoligono, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCaneta, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(7, Short.MAX_VALUE))
+                    .addComponent(btnCaneta, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(painelFerramentasLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(painelCorPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRetangulo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnElipse, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPoligono, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(Desfazer)
+                        .addComponent(Refazer))
+                    .addComponent(painelCorContorno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -252,7 +284,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void painelDesenhoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseReleased
         if (novaForma == null) return;
-
+        
+        painelDesenho.salvarEstado();
+        
         if (novaForma instanceof Caneta) {
             ((Caneta) novaForma).adicionarPonto(evt.getX(), evt.getY());
         } else {
@@ -309,6 +343,26 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }catch(NumberFormatException exc){
         }
     }//GEN-LAST:event_btnPoligonoActionPerformed
+
+    private void btnCanetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanetaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCanetaActionPerformed
+
+    private void btnElipseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElipseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnElipseActionPerformed
+
+    private void DesfazerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DesfazerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DesfazerActionPerformed
+
+    private void DesfazerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DesfazerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DesfazerMouseClicked
+
+    private void RefazerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RefazerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RefazerMouseClicked
     
     /**
      * @param args the command line arguments
@@ -336,6 +390,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Desfazer;
+    private javax.swing.ButtonGroup DesfazerRefazer;
+    private javax.swing.JButton Refazer;
     private javax.swing.JToggleButton btnBalde;
     private javax.swing.JToggleButton btnCaneta;
     private javax.swing.JToggleButton btnElipse;
