@@ -7,7 +7,7 @@ Este repositório contém um **programa de desenho** interativo, inspirado nas f
 * Seleção de diferentes cores para o traço.
 * Desenho de formula geometricas
 * Balde de Tinta
-* Desfazer e Fazer
+* Desfazer e refazer
 ## 💻 Tecnologias e Ferramentas
 * **Linguagem:** Java
 * **Interface Gráfica:** Engine customizada (material didático)
