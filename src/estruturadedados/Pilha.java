@@ -1,4 +1,4 @@
-package estruturasdedados;
+package estruturadedados;
 
 import gui.EstadoDesenho;
 import java.util.EmptyStackException;

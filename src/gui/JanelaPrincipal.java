@@ -25,6 +25,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     
     private Forma novaForma;
     private int quantidadeLados;
+    private int ultimoApagarX;
+    private int ultimoApagarY;
 
     /**
      * Creates new form JanelaPrincipal
@@ -32,8 +34,43 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     public JanelaPrincipal() {
         initComponents();
         quantidadeLados = 3;
+        
+        java.awt.event.ActionListener cursorListener = e -> atualizarCursor();
+        Borracha.addActionListener(cursorListener);
+        btnBalde.addActionListener(cursorListener);
+        btnLinha.addActionListener(cursorListener);
+        btnRetangulo.addActionListener(cursorListener);
+        btnElipse.addActionListener(cursorListener);
+        btnPoligono.addActionListener(cursorListener);
+        btnCaneta.addActionListener(cursorListener);
     }
+    
+    private void atualizarCursor() {
+        if (Borracha.isSelected()) {
+            java.awt.Dimension bestSize = java.awt.Toolkit.getDefaultToolkit().getBestCursorSize(12, 12);
+            int cursorWidth = Math.max(bestSize.width, 12);
+            int cursorHeight = Math.max(bestSize.height, 12);
 
+            java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(cursorWidth, cursorHeight, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+            java.awt.Graphics2D g = img.createGraphics();
+            
+            int startX = (cursorWidth - 12) / 2;
+            int startY = (cursorHeight - 12) / 2;
+
+            g.setColor(java.awt.Color.WHITE);
+            g.fillRect(startX, startY, 12, 12);
+            g.setColor(java.awt.Color.BLACK);
+            g.drawRect(startX, startY, 11, 11);
+            g.dispose();
+            
+            java.awt.Cursor cursorBorracha = java.awt.Toolkit.getDefaultToolkit().createCustomCursor(
+                    img, new java.awt.Point(startX + 6, startY + 6), "CursorBorracha");
+            painelDesenho.setCursor(cursorBorracha);
+        } else {
+            painelDesenho.setCursor(java.awt.Cursor.getDefaultCursor());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,6 +84,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         DesfazerRefazer = new javax.swing.ButtonGroup();
         painelDesenho = new gui.PainelDesenho();
         painelFerramentas = new javax.swing.JPanel();
+        Borracha = new javax.swing.JToggleButton();
         btnBalde = new javax.swing.JToggleButton();
         btnLinha = new javax.swing.JToggleButton();
         btnRetangulo = new javax.swing.JToggleButton();
@@ -84,8 +122,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         );
         painelDesenhoLayout.setVerticalGroup(
             painelDesenhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 259, Short.MAX_VALUE)
+            .addGap(0, 403, Short.MAX_VALUE)
         );
+
+        btnGroupFerramentas.add(Borracha);
+        Borracha.setText("Borracha");
+        Borracha.addActionListener(this::BorrachaActionPerformed);
 
         btnGroupFerramentas.add(btnBalde);
         btnBalde.setText("Balde");
@@ -203,7 +245,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnBalde)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPixelArt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Borracha)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addComponent(Desfazer)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Refazer)
@@ -217,23 +261,24 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelFerramentasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnCaneta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createSequentialGroup()
                         .addGap(1, 1, 1)
-                        .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(painelCorPreenchimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnRetangulo, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnElipse, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnPoligono, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnPoligono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnElipse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRetangulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLinha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(Desfazer)
                         .addComponent(Refazer))
                     .addComponent(painelCorContorno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(btnPixelArt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(btnBalde, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelFerramentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnPixelArt, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(Borracha))
+                    .addComponent(btnBalde, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCaneta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -262,6 +307,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             novaForma = null;
             return;
         }
+        
+        if (Borracha.isSelected()) {
+            painelDesenho.salvarEstado(); 
+            ultimoApagarX = evt.getX();
+            ultimoApagarY = evt.getY();
+            painelDesenho.apagar(ultimoApagarX, ultimoApagarY, evt.getX(), evt.getY());
+            novaForma = null; 
+            return; 
+        }
 
         if (btnPixelArt.isSelected() || painelDesenho.getGradePixelArt().isVisivel()) {
             painelDesenho.salvarEstado();
@@ -269,6 +323,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             novaForma = null;
             return;
         }
+        
+        painelDesenho.salvarEstado();
 
         if (btnLinha.isSelected()) {
             novaForma = new Linha();
@@ -317,6 +373,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void painelDesenhoMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_painelDesenhoMouseDragged
         
+        if (Borracha.isSelected()) {
+            painelDesenho.apagar(ultimoApagarX, ultimoApagarY, evt.getX(), evt.getY());
+            ultimoApagarX = evt.getX();
+            ultimoApagarY = evt.getY();
+            return; 
+        }
             
         if (painelDesenho.getGradePixelArt().isVisivel()) {
             painelDesenho.pintarPixel(evt.getX(), evt.getY(), painelCorContorno.getBackground());
@@ -409,6 +471,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
         painelDesenho.repaint();
     }//GEN-LAST:event_btnPixelArtActionPerformed
+
+    private void BorrachaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BorrachaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BorrachaActionPerformed
     
     /**
      * @param args the command line arguments
@@ -436,6 +502,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton Borracha;
     private javax.swing.JButton Desfazer;
     private javax.swing.ButtonGroup DesfazerRefazer;
     private javax.swing.JButton Refazer;

@@ -1,6 +1,6 @@
 package gui;
 
-import estruturasdedados.Pilha;
+import estruturadedados.Pilha;
 import gui.geom.Forma;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -75,7 +75,6 @@ public class PainelDesenho extends JPanel {
         super.paintComponent(g);
         inicializarBufferSeNecessario();
 
-        // 1. Desenha o fundo e a imagem do buffer
         if (imagemBuffer != null) {
             g.drawImage(imagemBuffer, 0, 0, null);
         } else {
@@ -83,12 +82,10 @@ public class PainelDesenho extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        // 2. Desenha as formas geométricas normais
         for (Forma forma : formas) {
             forma.desenhar(g);
         }
 
-        // 3. Desenha a grade e os pixels da Pixel Art por cima de tudo
         if (gradePixelArt != null) {
             gradePixelArt.desenhar(g, getWidth(), getHeight());
         }
@@ -113,5 +110,47 @@ public class PainelDesenho extends JPanel {
     public void pintarPixel(int mouseX, int mouseY, Color cor) {
         gradePixelArt.pintarPixel(mouseX, mouseY, getWidth(), getHeight(), cor);
         repaint();
+    }
+    
+    public void apagar(int x1, int y1, int x2, int y2) {
+        inicializarBufferSeNecessario();
+        if (imagemBuffer == null) return;
+
+        if (!formas.isEmpty()) {
+            Graphics2D gBuffer = imagemBuffer.createGraphics();
+            for (Forma forma : formas) {
+                forma.desenhar(gBuffer);
+            }
+            gBuffer.dispose();
+            formas.clear();
+        }
+
+        Graphics2D g2d = imagemBuffer.createGraphics();
+        g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(Color.WHITE); 
+
+        int tamanhoBorracha = 12;
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int sx = x1 < x2 ? 1 : -1;
+        int sy = y1 < y2 ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+            g2d.fillRect(x1 - (tamanhoBorracha / 2), y1 - (tamanhoBorracha / 2), tamanhoBorracha, tamanhoBorracha);
+            if (x1 == x2 && y1 == y2) break;
+            int e2 = 2 * err;
+            if (e2 > -dy) {
+                err -= dy;
+                x1 += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                y1 += sy;
+            }
+        }
+        
+        g2d.dispose();
+        repaint(); 
     }
 }
