@@ -8,6 +8,9 @@ Este repositório contém um **programa de desenho** interativo, inspirado nas f
 * Desenho de formula geometricas
 * Balde de Tinta
 * Desfazer e refazer
+* Modo PixelArt
+* Borracha
+  
 ## 💻 Tecnologias e Ferramentas
 * **Linguagem:** Java
 * **Interface Gráfica:** Engine customizada (material didático)
